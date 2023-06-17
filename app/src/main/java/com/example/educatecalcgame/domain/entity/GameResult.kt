@@ -11,7 +11,6 @@ import java.io.Serializable
  * countOfQuestion - общее количестов вопросов на которые игрок дал ответ
  * gameSetting - игровые настройки - для сравнения результатов
  */
-
 @Parcelize
 data class GameResult(
     val winner: Boolean,
