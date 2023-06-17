@@ -80,6 +80,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     //Действия при старте игры
     fun startGame(level: Level) {
         getGameSettings(level)
+        updateProgress()
         startTimer()
         generateQuestion()
     }
@@ -103,8 +104,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         _enoughPercent.value = percent >= gameSetting.minPercentOfRightAnswers
     }
     //Расчет процента полученны правильных ответов
-    private fun calculatePercentOfRightAnswers(): Int =
-        ((countOfRightAnswers / countOfQuestion.toDouble()) * 100).toInt()
+    private fun calculatePercentOfRightAnswers(): Int {
+        if (countOfQuestion==0) return 0
+        return ((countOfRightAnswers / countOfQuestion.toDouble()) * 100).toInt()
+    }
     //проверка введенного ответа, если верный увеличиваем счетчик полученных верных ответов
     //счетчие количества верных ответов обновляем постоянно
     private fun checkAnswer(number: Int) {
