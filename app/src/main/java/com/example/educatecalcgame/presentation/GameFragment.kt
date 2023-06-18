@@ -9,18 +9,21 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.educatecalcgame.R
 import com.example.educatecalcgame.databinding.FragmentGameBinding
 import com.example.educatecalcgame.domain.entity.GameResult
 import com.example.educatecalcgame.domain.entity.Level
 
 class GameFragment : Fragment() {
-
-
-    private lateinit var level: Level
+    //получаем аргументы по навигации
+    private val args by navArgs<GameFragmentArgs>()
 
     private val gameViewModelFactory by lazy {
-        GameViewModelFactory(level, requireActivity().application)
+        //второй метод получения аргументов
+       // val args = GameFragmentArgs.fromBundle(requireArguments())
+        GameViewModelFactory(args.level, requireActivity().application)
     }
     //подписываемся на вью модель
     private val viewModel by lazy {
@@ -49,10 +52,6 @@ class GameFragment : Fragment() {
     private val binding: FragmentGameBinding
         get() = _binding ?: throw RuntimeException("GameFinishedFragment is null")
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        parseArgs()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -127,28 +126,9 @@ class GameFragment : Fragment() {
     }
     // метод открытия следующего фрагмента
     private fun launchGameFinishedFragment(gameResult: GameResult) {
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.main_container, GameFinishedFragment.newInstance(gameResult))
-            .addToBackStack(null)
-            .commit()
+        findNavController().navigate(
+            GameFragmentDirections.actionGameFragmentToGameFinishedFragment(gameResult)
+        )
     }
-    //TODO: найти актуальный метод получения значений из парселизованных файлов
-    private fun parseArgs() {
-        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
-            level = it
-        }
-    }
-    // метод для получения экземпляра класса фрагмента
-    companion object {
-        const val GAME_NAME_BACKSTACK = "gameFragment"
-        private const val KEY_LEVEL = "level"
-        fun newInstance(level: Level): GameFragment {
-            return GameFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(KEY_LEVEL, level)
-                }
-            }
-        }
-    }
+
 }
