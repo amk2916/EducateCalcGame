@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.educatecalcgame.R
 import com.example.educatecalcgame.databinding.FragmentWelcomeBinding
 import java.util.zip.Inflater
@@ -31,11 +32,7 @@ class WelcomeFragment : Fragment() {
     }
 
     private fun launchChooseLevelFragment(){
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.main_container,ChooseLevelFragment.newInstance())
-            .addToBackStack(ChooseLevelFragment.CHOOSE_LEVEL_NAME_BACKSTACK)
-            .commit()
+        findNavController().navigate(R.id.action_welcomeFragment_to_chooseLevelFragment)
     }
 
 }
