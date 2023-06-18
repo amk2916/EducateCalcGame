@@ -49,12 +49,4 @@ class ChooseLevelFragment : Fragment() {
             ChooseLevelFragmentDirections.actionChooseLevelFragmentToGameFragment(level)
         )
     }
-
-    companion object{
-
-        const val CHOOSE_LEVEL_NAME_BACKSTACK = "chooseLevelFragment"
-        fun newInstance():ChooseLevelFragment{
-            return ChooseLevelFragment()
-        }
-    }
 }
