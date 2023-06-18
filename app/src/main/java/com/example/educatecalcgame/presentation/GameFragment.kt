@@ -16,13 +16,15 @@ import com.example.educatecalcgame.domain.entity.Level
 
 class GameFragment : Fragment() {
 
+
     private lateinit var level: Level
+
+    private val gameViewModelFactory by lazy {
+        GameViewModelFactory(level, requireActivity().application)
+    }
     //подписываемся на вью модель
     private val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
-        )[GameViewModel::class.java]
+        ViewModelProvider(this, gameViewModelFactory)[GameViewModel::class.java]
     }
     //Линивая инициализация для вариантов ответов
     private val tvOptions by lazy {
@@ -65,7 +67,6 @@ class GameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         setClickListenersToOptions()
-        viewModel.startGame(level)
     }
     //установка слушателей на варианты ответов
     private fun setClickListenersToOptions(){
