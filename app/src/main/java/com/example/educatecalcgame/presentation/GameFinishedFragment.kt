@@ -33,28 +33,82 @@ class GameFinishedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.buttonRetry.setOnClickListener {
-            retryGame()
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                retryGame()
-            }
+        setupOnClickListener()
+        bindViews()
 
-        })
 
     }
 
+    private fun setupOnClickListener() {
+        binding.buttonRetry.setOnClickListener {
+            retryGame()
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(
+                true
+            ) {
+                override fun handleOnBackPressed() {
+                    retryGame()
+                }
+
+            }
+        )
+    }
+
+    private fun bindViews(){
+        with(binding){
+            emojiResult.setImageResource(getSmileResId())
+
+            tvRequiredAnswers.text = String.format(
+                getString(R.string.required_score),
+                gameResult.gameSetting.minCountOfRightAnswers
+            )
+
+            tvScoreAnswers.text = String.format(
+                getString(R.string.score_answers),
+                gameResult.countOfRightAnswers
+            )
+
+            tvRequiredPercentage.text = String.format(
+                getString(R.string.required_percentage),
+                gameResult.gameSetting.minPercentOfRightAnswers
+            )
+
+            tvScorePercentage.text = String.format(
+                getString(R.string.score_percentage),
+                getPercentOfRightAnswers()
+            )
+
+        }
+    }
+
+    private fun getPercentOfRightAnswers() = with(gameResult){
+        if(countOfQuestion ==0){
+            0
+        }else{
+            ((countOfRightAnswers / countOfQuestion.toDouble())*100).toInt()
+        }
+    }
+    private fun getSmileResId():Int{
+        return if(gameResult.winner){
+            R.drawable.ic_smile
+        }else{
+            R.drawable.ic_sad
+        }
+    }
 
     private fun retryGame() {
         requireActivity().supportFragmentManager
             //FragmentManager.POP_BACK_STACK_INCLUSIVE - удалит из бэкстека все фрагменты до указанного, включая его
             // A -> B -> C -> D передаем B и этот флаг, удалится все до А
-            .popBackStack(GameFragment.GAME_NAME_BACKSTACK, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            .popBackStack(
+                GameFragment.GAME_NAME_BACKSTACK,
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
     }
 
     private fun parseArg() {
-        requireArguments().getParcelable<GameResult>(KEY_GAME_RESULT)?.let{
+        requireArguments().getParcelable<GameResult>(KEY_GAME_RESULT)?.let {
             gameResult = it
         }
     }

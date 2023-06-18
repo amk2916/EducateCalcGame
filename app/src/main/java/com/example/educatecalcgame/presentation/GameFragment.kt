@@ -88,9 +88,11 @@ class GameFragment : Fragment() {
             percentRightAnswers.observe(viewLifecycleOwner) {
                 binding.progressBar.setProgress(it, true)
             }
+            //изменение цвета текста в зависимости от количества введенных правильных ответов
             enoughCount.observe(viewLifecycleOwner) {
                 binding.tvAnswersProgress.setTextColor(getColorByState(it))
             }
+            //установка цвета прогресс бара
             enoughPercent.observe(viewLifecycleOwner) {
                 binding.progressBar.progressTintList = ColorStateList.valueOf(getColorByState(it))
             }
@@ -108,7 +110,7 @@ class GameFragment : Fragment() {
             }
         }
     }
-
+    //получение цвета в зависимости от состаяния
     private fun getColorByState(goodState: Boolean) : Int{
         val colorResId =  if (goodState) {
             android.R.color.holo_green_light
